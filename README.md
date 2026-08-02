@@ -41,7 +41,7 @@ sudo apt install python3 python3-venv python3-pip -y
 ### 2. Создание проекта
 
 ```bash
-mkdir -p ~/dns-automation
+git clone https://github.com/dmitry-reva/dns-automation
 cd ~/dns-automation
 python3 -m venv .venv
 source .venv/bin/activate
