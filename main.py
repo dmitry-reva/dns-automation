@@ -26,8 +26,8 @@ def get_external_ip():
 def get_current_a_record():
     """Получает текущую A-запись по recordId."""
     url = f"{BASE_URL}/directory/v1/org/{ORG_ID}/domains/{DOMAIN}/dns/{RECORD_ID}"
-    headers = {"Authorization": f"OAuth {YANDEX_OAUTH_TOKEN}"}
-    resp = requests.get(url, headers=headers, timeout=10)
+    headers = {"Authorization": f"OAuth {YANDEX_OAUTH_TOKEN}",  "Content-Type": "application/json"}
+    resp = requests.post(url, headers=headers, timeout=10)
     resp.raise_for_status()
     data = resp.json()
     # В ответе API Яндекс 360 для A-записи поле с IP называется "address"
@@ -59,14 +59,6 @@ if __name__ == "__main__":
     try:
         external_ip = get_external_ip()
         print(f"Текущий внешний IP: {external_ip}")
-
-        current_ip = get_current_a_record()
-        print(f"Текущий IP в DNS: {current_ip}")
-
-        if external_ip == current_ip:
-            print("IP не изменился — обновление не требуется.")
-        else:
-            print("Обнаружено изменение IP — выполняем обновление DNS.")
-            update_a_record(external_ip)
+        update_a_record(external_ip)
     except Exception as e:
         print(f"Критическая ошибка: {e}")
