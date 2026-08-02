@@ -36,17 +36,22 @@
 ```bash
 sudo apt update
 sudo apt install python3 python3-venv python3-pip -y
+```
 
 ### 2. Создание проекта
 
+```bash
 mkdir -p ~/dns-automation
 cd ~/dns-automation
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r ~/dns-automation/requirements.txt
+```
 или
+```bash
 pip install requests python-dotenv dns.resolver
 pip freeze > requirements.txt
+```
 
 ### 3. Создание файлов
 Создай файлы config.py, main.py и .env в папке ~/dns-automation (код смотри в разделе «Файлы проекта»).
@@ -54,18 +59,21 @@ pip freeze > requirements.txt
 ### 4. Настройка .env
 
 Пример содержимого .env:
+```ini
 YANDEX_OAUTH_TOKEN=y0_AgAAAA...
 ORG_ID=12345678
 DOMAIN=example.com
 RECORD_ID=987654321
 TTL=3600
 NAME=@
-
+```
 NAME=@ — для корневого домена (example.com).
 NAME=www — для поддомена (www.example.com).
 Не выкладывай .env в публичные репозитории.
 
 ### Получение RECORD_ID
 Если RECORD_ID неизвестен, сделай разовый запрос:
+```bash
 curl -H "Authorization: OAuth y0_AgAAAA..." \
   "https://api360.yandex.net/directory/v1/org/12345678/domains/example.com/dns"
+  ```
