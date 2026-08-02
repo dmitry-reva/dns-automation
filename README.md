@@ -54,7 +54,10 @@ pip freeze > requirements.txt
 ```
 
 ### 3. Создание файлов
-Создай файлы config.py, main.py и .env в папке ~/dns-automation (код смотри в разделе «Файлы проекта»).
+Создать .env в папке ~/dns-automation.
+```bash
+touch ~/dns-automation/.env
+```
 
 ### 4. Настройка .env
 
@@ -74,9 +77,23 @@ NAME=@ — для корневого домена (example.com).
 NAME=www — для поддомена (www.example.com).
 > Предположительно для корневого домена нужно исправить определение current_ip в main.py 
 
+### Получение YANDEX_OAUTH_TOKEN
+
+Инструкция: https://yandex.ru/dev/id/doc/ru/register-client
+
+Интерфейс для приложения: https://oauth.yandex.ru/
+
+### Получение ORG_ID
+
+На странице управления организацией выберите актуальную: https://admin.yandex.ru/domains/. ORG_ID в левом меню внизу (ID) или на странице в кнопке "Профиль организации" (ID).
+
 ### Получение RECORD_ID
-Если RECORD_ID неизвестен, сделай разовый запрос:
+
+> Использовать ранее полученные YANDEX_OAUTH_TOKEN и ORG_ID в скрипте домен использовать родительский. Вывод JSON может быть многостраничным, используйте указание на нужную страницу для вашего поддмена.
+
+> Инструкция: https://yandex.ru/dev/api360/doc/ru/ref/DomainDNSService/DomainDNSService_List 
+
 ```bash
-curl -H "Authorization: OAuth y0_AgAAAA..." \
-  "https://api360.yandex.net/directory/v1/org/12345678/domains/example.com/dns"
+curl -H "Authorization: OAuth `YANDEX_OAUTH_TOKEN`" \
+  "https://api360.yandex.net/directory/v1/org/`ORG_ID`/domains/`example.com`/dns"
   ```
