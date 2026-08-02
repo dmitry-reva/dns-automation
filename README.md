@@ -54,7 +54,9 @@ pip freeze > requirements.txt
 ```
 
 ### 3. Создание файлов
+
 Создать .env в папке ~/dns-automation.
+
 ```bash
 touch ~/dns-automation/.env
 ```
@@ -72,9 +74,9 @@ RECORD_ID=987654321
 TTL=3600
 NAME=@
 ```
-NAME=@ — для корневого домена (example.com).
+- NAME=@ — для корневого домена (example.com),
+- NAME=www — для поддомена (www.example.com).
 
-NAME=www — для поддомена (www.example.com).
 > Предположительно для корневого домена нужно исправить определение current_ip в main.py 
 
 ### Получение YANDEX_OAUTH_TOKEN
@@ -89,11 +91,21 @@ NAME=www — для поддомена (www.example.com).
 
 ### Получение RECORD_ID
 
-> Использовать ранее полученные YANDEX_OAUTH_TOKEN и ORG_ID в скрипте домен использовать родительский. Вывод JSON может быть многостраничным, используйте указание на нужную страницу для вашего поддмена.
+> Использовать ранее полученные YANDEX_OAUTH_TOKEN и ORG_ID, DOMAIN в скрипте домен использовать родительский. 
 
-> Инструкция: https://yandex.ru/dev/api360/doc/ru/ref/DomainDNSService/DomainDNSService_List 
+Инструкция: https://yandex.ru/dev/api360/doc/ru/ref/DomainDNSService/DomainDNSService_List 
 
+Шаблон:
 ```bash
-curl -H "Authorization: OAuth `YANDEX_OAUTH_TOKEN`" \
-  "https://api360.yandex.net/directory/v1/org/`ORG_ID`/domains/`example.com`/dns"
+curl -H "Authorization: OAuth <YANDEX_OAUTH_TOKEN>" \
+  "https://api360.yandex.net/directory/v1/org/<ORG_ID>/domains/<DOMAIN>/dns"
   ```
+
+Пример с "реальными" данными: 
+
+  ```bash
+# Пример с подставленными значениями (ДЛЯ ПОНИМАНИЯ ФОРМАТА)
+curl -H "Authorization: OAuth y0_AgAAA..." \
+  "https://api360.yandex.net/directory/v1/org/12345678/domains/example.com/dns"
+  ```
+> Вывод JSON может быть многостраничным, используйте указание на нужную страницу для вашего поддмена.
