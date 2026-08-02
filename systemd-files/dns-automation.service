@@ -1,0 +1,14 @@
+[Unit]
+Description=DNS A-record updater with external IP detection (Yandex 360)
+After=network.target
+
+[Service]
+Type=oneshot
+User=user
+WorkingDirectory=/home/user/dns-automation
+ExecStart=/home/user/dns-automation/.venv/bin/python /home/user/dns-automation/main.py
+EnvironmentFile=/home/user/dns-automation/.env
+# Логирование через stdout/stderr будет попадать в journalctl
+
+[Install]
+WantedBy=multi-user.target

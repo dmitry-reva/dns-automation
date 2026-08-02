@@ -43,7 +43,9 @@ mkdir -p ~/dns-automation
 cd ~/dns-automation
 python3 -m venv .venv
 source .venv/bin/activate
-pip install requests python-dotenv
+pip install -r ~/dns-automation/requirements.txt
+или
+pip install requests python-dotenv dns.resolver
 pip freeze > requirements.txt
 
 ### 3. Создание файлов

@@ -1,4 +1,5 @@
 import requests
+import dns.resolver
 from config import YANDEX_OAUTH_TOKEN, ORG_ID, DOMAIN, RECORD_ID, TTL, NAME
 
 BASE_URL = "https://api360.yandex.net"
@@ -23,15 +24,14 @@ def get_external_ip():
             continue
     raise RuntimeError("Не удалось получить внешний IP ни через один сервис")
 
-def get_current_a_record():
-    """Получает текущую A-запись по recordId."""
-    url = f"{BASE_URL}/directory/v1/org/{ORG_ID}/domains/{DOMAIN}/dns/{RECORD_ID}"
-    headers = {"Authorization": f"OAuth {YANDEX_OAUTH_TOKEN}",  "Content-Type": "application/json"}
-    resp = requests.post(url, headers=headers, timeout=10)
-    resp.raise_for_status()
-    data = resp.json()
-    # В ответе API Яндекс 360 для A-записи поле с IP называется "address"
-    return data.get("address")
+def get_current_a_record(domain: str) -> str:
+    """
+    Делает DNS-запрос и возвращает первый найденный A-адрес для домена.
+    Это то, что реально резолвится для домена, без обращения к API Яндекс 360.
+    """
+    resolver = dns.resolver.Resolver()
+    answers = resolver.resolve(domain, "A")
+    return str(answers[0])
 
 def update_a_record(new_ip):
     """Обновляет A-запись, если нужно."""
@@ -59,6 +59,12 @@ if __name__ == "__main__":
     try:
         external_ip = get_external_ip()
         print(f"Текущий внешний IP: {external_ip}")
-        update_a_record(external_ip)
+        current_ip = get_current_a_record(NAME+"."+DOMAIN)
+        print(f"Текущий IP в DNS: {current_ip}")
+        if external_ip == current_ip:
+            print("IP не изменился — обновление не требуется.")
+        else:
+            print("Обнаружено изменение IP — выполняем обновление DNS.")
+            update_a_record(external_ip)
     except Exception as e:
         print(f"Критическая ошибка: {e}")

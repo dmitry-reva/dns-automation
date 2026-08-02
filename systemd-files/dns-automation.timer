@@ -1,0 +1,15 @@
+[Unit]
+Description=Run DNS updater every 12 hours
+
+[Timer]
+# Запуск каждые 12 часов
+OnCalendar=*-*-* 00:00,12:00
+# Или альтернативный вариант (каждые 12 часов с момента активации):
+# Persistent=true
+# OnBootSec=12h
+# OnUnitActiveSec=12h
+
+Unit=dns-automation.service
+
+[Install]
+WantedBy=timers.target
